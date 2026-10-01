@@ -35,6 +35,15 @@ const EXT_ID = `${EXT_PUBLISHER}.${EXT_NAME}`;
 const EXT_VERSION = '0.0.11';
 const OPEN_VSX_API = 'https://open-vsx.org';
 const AUTO_YES = process.argv.includes('--yes');
+// 允许显式指定 Cursor 安装目录：node install.mjs "D:\我的Cursor" 或 --dir=...
+const ARG_DIR = (() => {
+  for (const a of process.argv.slice(2)) {
+    if (a.startsWith('--dir=')) return a.slice(6);
+    if (a === '--dir') return undefined; // --dir 后面跟单独参数的形式不支持，略
+  }
+  const bare = process.argv.slice(2).find((a) => !a.startsWith('--') && a !== '--yes');
+  return bare || undefined;
+})();
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const extrasPath = join(scriptDir, 'dict', 'extras.json');
@@ -68,7 +77,14 @@ async function askYesNo(question, fallbackYes = true) {
   return a === '' || a === 'y' || a === 'yes';
 }
 
+function isValidInstallRoot(dir) {
+  return !!dir && existsSync(join(dir, 'Cursor.exe'));
+}
+
 function findCursorInstallRoot() {
+  // 0) 用户显式指定的目录（命令行参数）
+  if (ARG_DIR && isValidInstallRoot(ARG_DIR)) return ARG_DIR;
+
   // 1) PATH 中的 cursor 命令（…\resources\app\bin\cursor.cmd / cursor 脚本）
   try {
     const lines = sh('where cursor').split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
@@ -81,16 +97,21 @@ function findCursorInstallRoot() {
     }
   } catch { /* where 没找到，继续往下 */ }
 
-  // 2) 注册表（Inno Setup 安装记录）
-  try {
-    const out = sh(
-      'reg query "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Cursor_is1" /v InstallLocation'
-    );
-    const m = out.match(/InstallLocation\s+REG_SZ\s+(.+)/i);
-    if (m && existsSync(join(m[1].trim(), 'Cursor.exe'))) return m[1].trim();
-  } catch { /* 没有注册表项，继续往下 */ }
+  // 2) 注册表（Inno Setup 安装记录：HKCU 用户级 / HKLM 系统级 / 32 位视图）
+  const regKeys = [
+    'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Cursor_is1',
+    'HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Cursor_is1',
+    'HKLM\\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Cursor_is1',
+  ];
+  for (const key of regKeys) {
+    try {
+      const out = sh(`reg query "${key}" /v InstallLocation`);
+      const m = out.match(/InstallLocation\s+REG_SZ\s+(.+)/i);
+      if (m && isValidInstallRoot(m[1].trim())) return m[1].trim();
+    } catch { /* 该键不存在，继续 */ }
+  }
 
-  // 3) 常见安装路径
+  // 3) 常见安装路径（官方默认 = 用户级 LOCALAPPDATA）
   const candidates = [
     join(process.env.LOCALAPPDATA || '', 'Programs', 'cursor'),
     join(process.env.LOCALAPPDATA || '', 'Programs', 'Cursor'),
@@ -98,7 +119,7 @@ function findCursorInstallRoot() {
     join(process.env['ProgramFiles(x86)'] || '', 'Cursor'),
   ];
   for (const p of candidates) {
-    if (p && existsSync(join(p, 'Cursor.exe'))) return p;
+    if (p && isValidInstallRoot(p)) return p;
   }
   return null;
 }
@@ -247,6 +268,43 @@ function patchEngineAsset(extDir) {
     info('[警告] 引擎代码结构有变化，补丁2 未应用（不影响其余步骤）。');
   }
 
+  // 补丁 3：分组文本节点回退 —— 菜单标题因助记符渲染被拆成
+  // <mnemonic>F</mnemonic>ile 的形态，单节点匹配不上词典；
+  // 用父元素合并文本整体匹配，仅当元素子节点都是装饰性标签时替换。
+  const R3_ANCHOR = '      this.nodeCache.set(textNode, originalText);\r\n      return false;\r\n    }';
+  const R3_ANCHOR_LF = R3_ANCHOR.replace(/\r\n/g, '\n');
+  const R3_INSERT = `      // [cursor-zh-grouped] 拆分文本节点回退：菜单标题因助记符渲染被拆成\r\n      // <mnemonic>F</mnemonic>ile 的形态，单节点匹配不上词典。\r\n      // 用父元素合并文本整体匹配；仅当元素子节点都是装饰性标签时替换。\r\n      var parentEl = textNode.parentElement;\r\n      if (parentEl && parentEl.textContent && parentEl.textContent.length <= 80) {\r\n        var decoOnly = true;\r\n        var decoKids = parentEl.children;\r\n        for (var dk = 0; dk < decoKids.length; dk++) {\r\n          var dkTag = decoKids[dk].tagName;\r\n          if (dkTag !== 'MNEMONIC' && decoKids[dk].getAttribute('aria-hidden') !== 'true') {\r\n            decoOnly = false;\r\n            break;\r\n          }\r\n        }\r\n        if (decoOnly) {\r\n          var groupHit = exactMap.get(normalizeForMatch(parentEl.textContent));\r\n          if (groupHit !== undefined && groupHit !== parentEl.textContent) {\r\n            parentEl.textContent = groupHit;\r\n            return true;\r\n          }\r\n        }\r\n      }\r\n\r\n`;
+  if (s.includes('[cursor-zh-grouped]')) {
+    skipped.push('补丁3（分组文本回退）：已存在');
+  } else if (s.includes(R3_ANCHOR)) {
+    s = s.replace(R3_ANCHOR, R3_INSERT + R3_ANCHOR);
+    applied.push('补丁3：分组文本节点回退（助记符菜单标题）');
+  } else if (s.includes(R3_ANCHOR_LF)) {
+    s = s.replace(R3_ANCHOR_LF, R3_INSERT.replace(/\r\n/g, '\n') + R3_ANCHOR_LF);
+    applied.push('补丁3：分组文本节点回退（LF 版本）');
+  } else {
+    info('[警告] 引擎代码结构有变化，补丁3 未应用（不影响其余步骤）。');
+  }
+
+  // 补丁 4：启动竞态兜底 —— 初始扫描与观察器生效之间存在窗口期，
+  // 工作区面板（大纲、标签页等）此时挂载或被模型重写为英文后会永久停留；
+  // 延迟补扫两轮（nodeCache 让已翻译节点秒过）。
+  const R4_ANCHOR = '      runInitialPass();\r\n      startMutationObservers();\r\n    } catch (_error) {';
+  const R4_ANCHOR_LF = R4_ANCHOR.replace(/\r\n/g, '\n');
+  const R4_TAIL = `      runInitialPass();\r\n      startMutationObservers();\r\n\r\n      // [cursor-zh-catchup] 启动竞态兜底：延迟补扫两轮，覆盖初始扫描与\r\n      // 观察器生效之间的挂载/重写窗口（nodeCache 保证已翻译节点秒过）。\r\n      setTimeout(function () { try { runInitialPass(); } catch (_eCatchup1) {} }, 2500);\r\n      setTimeout(function () { try { runInitialPass(); } catch (_eCatchup2) {} }, 9000);\r\n    } catch (_error) {`;
+  const R4_TAIL_LF = R4_TAIL.replace(/\r\n/g, '\n');
+  if (s.includes('[cursor-zh-catchup]')) {
+    skipped.push('补丁4（启动竞态补扫）：已存在');
+  } else if (s.includes(R4_ANCHOR)) {
+    s = s.replace(R4_ANCHOR, R4_TAIL);
+    applied.push('补丁4：启动竞态兜底补扫');
+  } else if (s.includes(R4_ANCHOR_LF)) {
+    s = s.replace(R4_ANCHOR_LF, R4_TAIL_LF);
+    applied.push('补丁4：启动竞态兜底补扫（LF 版本）');
+  } else {
+    info('[警告] 引擎代码结构有变化，补丁4 未应用（不影响其余步骤）。');
+  }
+
   writeFileSync(assetPath, s);
   if (applied.length) applied.forEach((a) => info(a));
   if (skipped.length) skipped.forEach((a) => info(a));
@@ -283,9 +341,25 @@ async function main() {
   console.log('=========================================');
 
   step(1, '检测 Cursor 安装位置');
-  const root = findCursorInstallRoot();
+  let root = findCursorInstallRoot();
   if (!root) {
-    die('未找到 Cursor 安装目录。请先安装 Cursor，或把安装路径反馈到仓库 Issue。');
+    // 自动检测失败：交互式询问路径（任何目录都能装，兼容自定义安装位置）
+    if (!AUTO_YES) {
+      const rl0 = createInterface({ input, output });
+      const answer = (await rl0.question('未自动找到 Cursor。请粘贴 Cursor 安装目录（含 Cursor.exe 的文件夹，例如 C:\\Users\\你\\AppData\\Local\\Programs\\cursor）：')).trim().replace(/^"|"$/g, '');
+      rl0.close();
+      if (isValidInstallRoot(answer)) {
+        root = answer;
+      } else if (answer) {
+        die(`该目录下没有找到 Cursor.exe：${answer}`);
+      }
+    }
+    if (!root) {
+      die('未找到 Cursor 安装目录。解决方法任选：\n' +
+          '  1. 先安装 Cursor 后重试；\n' +
+          '  2. 把安装路径作为参数传入：一键汉化.bat "D:\\你的目录\\cursor"；\n' +
+          '  3. 命令行运行：node scripts\\install.mjs --dir="D:\\你的目录\\cursor"。');
+    }
   }
   info(`Cursor 位置：${root}`);
 

@@ -13,13 +13,20 @@ Cursor 的界面分两层，官方都没有完整中文支持：
 | 编辑器底座 | 菜单、命令面板、IDE 设置、提示 | 微软官方 [中文语言包](https://marketplace.visualstudio.com/items?itemName=MS-CEINTL.vscode-language-pack-zh-hans) |
 | Cursor 自有界面 | Agents 侧栏（New Chat / Automations…）、Cursor 设置页、聊天气泡、按钮等 | 微软语言包**管不到**，官方暂未支持中文（[论坛讨论](https://forum.cursor.com/t/please-add-chinese-support-for-the-agents-window/161942)），由开源扩展 [ggbdpq/cursor-language-pack-zh-hans](https://open-vsx.org/extension/ggbdpq/cursor-language-pack-zh-hans) 补齐 |
 
-本仓库把两者打包成**一键脚本**，并在该扩展之上做了两点增强（已反馈可复现的问题）：
+本仓库把两者打包成**一键脚本**，并在该扩展之上做了四点增强：
 
 1. **修复扫描盲区**：原版翻译引擎只扫描启动时已存在、且位于预设区域内的界面，
-   导致侧栏这类「启动后才异步挂载」的界面永远保持英文。本项目给引擎打了补丁，
-   让扫描和实时监听覆盖整个页面（编辑器、终端、代码块仍受原版禁区保护，不会误翻）。
-2. **补齐词典**：原版词典跟不上 Cursor 版本迭代，本项目补充了 Cursor 3.20 新增文案
-   等 23 条翻译（见 [`scripts/dict/extras.json`](scripts/dict/extras.json)），欢迎 PR 继续補。
+   导致侧栏这类「启动后才异步挂载」的界面永远保持英文。本项目把整个页面
+   纳入扫描根与实时监听区（编辑器、终端、代码块仍受原版禁区保护，不会误翻）。
+2. **修复菜单栏不翻译**：VS Code 菜单标题因助记符渲染被拆成
+   `<mnemonic>F</mnemonic>ile` 的多个文本节点，逐节点匹配永远打不中词典。
+   引擎获得「分组文本回退」能力：父元素整体文本命中词典时整体替换，
+   菜单栏（文件/编辑/选择/视图/转到/终端/帮助）由此变中文。
+3. **启动竞态兜底**：大纲、标签页等面板在初始扫描与监听生效之间的窗口期
+   挂载或被模型重写为英文后会永久停留。启动后延迟补扫两轮覆盖该窗口。
+4. **补齐词典**：原版词典跟不上 Cursor 版本迭代，本项目补充了 Cursor 3.20
+   新增文案、IDE 专属文案等 44 条翻译（合计 1552 条，
+   见 [`scripts/dict/extras.json`](scripts/dict/extras.json)），欢迎 PR 继续補。
 
 ## 环境要求
 
@@ -63,8 +70,19 @@ Cursor 每次升级会覆盖程序文件，汉化随之失效。**重新运行 `
 
 ## 常见问题
 
+- **双击 BAT 后窗口一闪而过 / 闪退？**
+  旧版本 BAT 文件是 LF 换行，部分中文系统上 cmd 无法解析导致闪退，**已修复为 CRLF**——请重新下载最新版仓库。
+  若仍闪退：右键「在终端中打开」，手动运行 `node scripts\install.mjs` 查看具体报错，欢迎带截图提 Issue。
+- **没有 Node.js 会不会闪退？**
+  不会。脚本会先检测 Node.js，没有时尝试用 winget 自动安装；安装失败也会停在窗口里给出手动安装指引。
+- **我的 Cursor 装在非默认目录怎么办？**
+  脚本会依次尝试：PATH 中的 cursor 命令 → 注册表（HKCU/HKLM 安装记录）→ 常见安装路径。
+  都找不到时会**交互式询问**你安装目录（粘贴含 Cursor.exe 的文件夹即可），
+  也可以直接传参：`一键汉化.bat "D:\你的目录\cursor"` 或 `node scripts\install.mjs --dir="D:\你的目录\cursor"`。
+- **支持哪些 Cursor 版本？**
+  面向 Cursor 3.x（词典在 3.14+ 上验证）。脚本对引擎补丁做了锚点兼容处理，结构对不上时会警告并跳过（不影响其余步骤）。
 - **为什么有些地方还是英文？**
-  模型名（如 `Cursor Grok 4.6 Medium`）、账号名、仓库名、品牌词保持原文是正常设计。
+  模型名（如 `Claude Opus 5.5`）、账号名、仓库名、品牌词保持原文是正常设计。
   其他漏翻欢迎提 Issue / PR（在 `scripts/dict/extras.json` 加一条即可）。
 - **杀毒软件报警？**
   脚本的行为是「下载扩展 + 修改 Cursor 安装目录内的两个文件 + 重启进程」，属于补丁类工具的正常操作，

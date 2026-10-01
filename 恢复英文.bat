@@ -1,4 +1,5 @@
 @echo off
+setlocal
 chcp 65001 >nul
 title Cursor 恢复英文界面
 cd /d "%~dp0"
@@ -11,6 +12,6 @@ if errorlevel 1 (
   exit /b 1
 )
 
-node "%~dp0scripts\restore.mjs"
+node "%~dp0scriptsestore.mjs" %*
 echo.
 pause

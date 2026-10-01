@@ -1,25 +1,427 @@
 [
-  { "originalText": "New Project", "changeText": "新建项目", "searchType": "exact" },
-  { "originalText": "Projects", "changeText": "项目", "searchType": "exact" },
-  { "originalText": "Tasks", "changeText": "任务", "searchType": "exact" },
-  { "originalText": "This PC", "changeText": "此电脑", "searchType": "exact" },
-  { "originalText": "Plan New Idea", "changeText": "规划新想法", "searchType": "exact" },
-  { "originalText": "Multitask", "changeText": "多任务", "searchType": "exact" },
-  { "originalText": "Build from a design", "changeText": "从设计稿构建", "searchType": "exact" },
-  { "originalText": "Turn a frame into working UI in this repo", "changeText": "把设计稿变成此仓库中可用的 UI", "searchType": "exact" },
-  { "originalText": "Deploy my prototype", "changeText": "部署我的原型", "searchType": "exact" },
-  { "originalText": "Put it on a live link anyone can open", "changeText": "发布成任何人都能打开的在线链接", "searchType": "exact" },
-  { "originalText": "Create Profile", "changeText": "创建个人资料", "searchType": "exact" },
-  { "originalText": "Get Cursor for iOS", "changeText": "获取 Cursor iOS 版", "searchType": "exact" },
-  { "originalText": "Get Grok Bot", "changeText": "获取 Grok 机器人", "searchType": "exact" },
-  { "originalText": "Shortcuts", "changeText": "快捷键", "searchType": "exact" },
-  { "originalText": "Contact Us", "changeText": "联系我们", "searchType": "exact" },
-  { "originalText": "Getting Started", "changeText": "开始使用", "searchType": "exact" },
-  { "originalText": "Connect GitHub", "changeText": "连接 GitHub", "searchType": "exact" },
-  { "originalText": "Upgrade to Pro", "changeText": "升级到 Pro", "searchType": "exact" },
-  { "originalText": "You've hit your usage limit", "changeText": "你已达到用量上限", "searchType": "exact" },
-  { "originalText": "Get Cursor Pro for more Agent usage, unlimited Tab, and more.", "changeText": "升级 Cursor Pro，解锁更多 Agent 用量、不限量 Tab 等权益。", "searchType": "exact" },
-  { "originalText": "No Repo", "changeText": "无仓库", "searchType": "exact" },
-  { "originalText": "Learn more", "changeText": "了解更多", "searchType": "exact" },
-  { "originalText": "Skip", "changeText": "跳过", "searchType": "exact" }
+  {
+    "originalText": "New Project",
+    "changeText": "新建项目",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Projects",
+    "changeText": "项目",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Tasks",
+    "changeText": "任务",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "This PC",
+    "changeText": "此电脑",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Plan New Idea",
+    "changeText": "规划新想法",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Multitask",
+    "changeText": "多任务",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Build from a design",
+    "changeText": "从设计稿构建",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Turn a frame into working UI in this repo",
+    "changeText": "把设计稿变成此仓库中可用的 UI",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Deploy my prototype",
+    "changeText": "部署我的原型",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Put it on a live link anyone can open",
+    "changeText": "发布成任何人都能打开的在线链接",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Create Profile",
+    "changeText": "创建个人资料",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Get Cursor for iOS",
+    "changeText": "获取 Cursor iOS 版",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Get Grok Bot",
+    "changeText": "获取 Grok 机器人",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Shortcuts",
+    "changeText": "快捷键",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Contact Us",
+    "changeText": "联系我们",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Getting Started",
+    "changeText": "开始使用",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Connect GitHub",
+    "changeText": "连接 GitHub",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Upgrade to Pro",
+    "changeText": "升级到 Pro",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "You've hit your usage limit",
+    "changeText": "你已达到用量上限",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Get Cursor Pro for more Agent usage, unlimited Tab, and more.",
+    "changeText": "升级 Cursor Pro，解锁更多 Agent 用量、不限量 Tab 等权益。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No Repo",
+    "changeText": "无仓库",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Learn more",
+    "changeText": "了解更多",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Skip",
+    "changeText": "跳过",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Selection",
+    "changeText": "选择",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Go",
+    "changeText": "转到",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Edit file",
+    "changeText": "编辑文件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Run command",
+    "changeText": "运行命令",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Planning next moves",
+    "changeText": "正在规划后续步骤",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "OUTLINE",
+    "changeText": "大纲",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Outline",
+    "changeText": "大纲",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No commit scored",
+    "changeText": "暂无提交评分",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Keep all changes",
+    "changeText": "保留所有更改",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Review Next File",
+    "changeText": "审查下一个文件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "&&File",
+    "changeText": "文件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "&&Edit",
+    "changeText": "编辑",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "&&View",
+    "changeText": "查看",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "&&Selection",
+    "changeText": "选择",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "&&Go",
+    "changeText": "转到",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "&&Run",
+    "changeText": "运行",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "&&Terminal",
+    "changeText": "终端",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "&&Help",
+    "changeText": "帮助",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Worked for",
+    "changeText": "耗时",
+    "searchType": "partial"
+  },
+  {
+    "originalText": "Tab Stats",
+    "changeText": "Tab 统计",
+    "searchType": "partial"
+  },
+  {
+    "originalText": "Agent Stats",
+    "changeText": "Agent 统计",
+    "searchType": "partial"
+  },
+  {
+    "originalText": "New Agent Window",
+    "changeText": "新建智能体窗口",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Close Window",
+    "changeText": "关闭窗口",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open View...",
+    "changeText": "打开视图...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Explorer",
+    "changeText": "资源管理器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Source Control",
+    "changeText": "源代码管理",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Problems",
+    "changeText": "问题",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Output",
+    "changeText": "输出",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Report Issue",
+    "changeText": "报告问题",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Give Feedback...",
+    "changeText": "提供反馈...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Give Feedback",
+    "changeText": "提供反馈",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Toggle Developer Tools",
+    "changeText": "切换开发人员工具",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Process Explorer",
+    "changeText": "打开进程资源管理器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Browser",
+    "changeText": "打开浏览器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Export Transcript",
+    "changeText": "导出对话记录",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Share Transcript",
+    "changeText": "分享对话记录",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Copy Request ID",
+    "changeText": "复制请求 ID",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Configure Icon Visibility",
+    "changeText": "配置图标可见性",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "New Agent (Ctrl+N)",
+    "changeText": "新建智能体 (Ctrl+N)",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "[Alt] Replace Agent",
+    "changeText": "[Alt] 替换智能体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Go Back (Alt+LeftArrow)",
+    "changeText": "后退 (Alt+左方向键)",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Go Forward (Alt+RightArrow)",
+    "changeText": "前进 (Alt+右方向键)",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Toggle Primary Side Bar (Ctrl+B)",
+    "changeText": "切换主侧边栏 (Ctrl+B)",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Toggle Agents (Ctrl+Alt+J)",
+    "changeText": "切换智能体 (Ctrl+Alt+J)",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Cursor Settings",
+    "changeText": "打开 Cursor 设置",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "New 智能体窗口",
+    "changeText": "新建智能体窗口",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Close Pane (Ctrl+F4)",
+    "changeText": "关闭窗格 (Ctrl+F4)",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show Chat History",
+    "changeText": "显示聊天历史",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show Agents Side Bar",
+    "changeText": "显示智能体侧边栏",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Unified agents sidebar",
+    "changeText": "统一智能体侧边栏",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Search Agents…",
+    "changeText": "搜索智能体…",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Filter by Environment",
+    "changeText": "按环境筛选",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No commit has been scored yet",
+    "changeText": "尚未对提交评分",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "New Agent",
+    "changeText": "新建智能体",
+    "searchType": "partial"
+  },
+  {
+    "originalText": "New Agents Window",
+    "changeText": "新建智能体窗口",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Agents Window",
+    "changeText": "智能体窗口",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Add Symbol to Current Chat",
+    "changeText": "将符号添加到当前对话",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Add Symbol to New Chat",
+    "changeText": "将符号添加到新对话",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show Agents Side Bar (Ctrl+Alt+U)",
+    "changeText": "显示智能体侧边栏 (Ctrl+Alt+U)",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Inline diffs have been suppressed for recent changes because there are too many to display.",
+    "changeText": "最近的更改太多，行内差异已被暂时隐藏。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Disable Protection",
+    "changeText": "禁用保护",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "New Agent (Ctrl+N)\r\n[Alt] Replace Agent",
+    "changeText": "新建智能体 (Ctrl+N)\r\n[Alt] 替换智能体",
+    "searchType": "exact"
+  }
 ]
