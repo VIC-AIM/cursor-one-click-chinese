@@ -423,5 +423,85 @@
     "originalText": "New Agent (Ctrl+N)\r\n[Alt] Replace Agent",
     "changeText": "新建智能体 (Ctrl+N)\r\n[Alt] 替换智能体",
     "searchType": "exact"
+  },
+  {
+    "originalText": "Search Agents...",
+    "changeText": "搜索智能体...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Today",
+    "changeText": "今天",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Archived",
+    "changeText": "已归档",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Restore",
+    "changeText": "恢复",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Pin",
+    "changeText": "置顶",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open in New Tab",
+    "changeText": "在新标签页中打开",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Delete",
+    "changeText": "删除",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Rename",
+    "changeText": "重命名",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show Terminal",
+    "changeText": "显示终端",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Maximize Chat",
+    "changeText": "最大化聊天",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Add Repository",
+    "changeText": "添加仓库",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Greeting conversation",
+    "changeText": "问候对话",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Personal conversation",
+    "changeText": "个人对话",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Rename Chat",
+    "changeText": "重命名聊天",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Fork Chat",
+    "changeText": "分叉聊天",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Move into New Window",
+    "changeText": "移入新窗口",
+    "searchType": "exact"
   }
 ]
