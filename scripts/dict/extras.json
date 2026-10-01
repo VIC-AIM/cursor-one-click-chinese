@@ -503,5 +503,35 @@
     "originalText": "Move into New Window",
     "changeText": "移入新窗口",
     "searchType": "exact"
+  },
+  {
+    "originalText": "No matching agents",
+    "changeText": "没有匹配的智能体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open project",
+    "changeText": "打开项目",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Clone repo",
+    "changeText": "克隆仓库",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Connect via SSH",
+    "changeText": "通过 SSH 连接",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Recent projects",
+    "changeText": "最近的项目",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Try a new window for running parallel agents",
+    "changeText": "尝试用新窗口并行运行智能体",
+    "searchType": "exact"
   }
 ]
