@@ -533,5 +533,16 @@
     "originalText": "Try a new window for running parallel agents",
     "changeText": "尝试用新窗口并行运行智能体",
     "searchType": "exact"
+  },
+  {
+    "originalText": "Worked",
+    "changeText": "耗时",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "^for [0-9hms ]+$",
+    "changeText": "",
+    "searchType": "regex",
+    "flags": ""
   }
 ]

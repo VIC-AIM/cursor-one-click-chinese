@@ -350,6 +350,42 @@ async function applyLocalization(extDir, root) {
   const res = await core.applyPatch({ installRoot: root, replacements });
   if (!res.ok) die((res.lines || []).join('\n'));
   (res.lines || []).forEach((l) => info(l));
+
+  // 静态标签替换：部分右键菜单/悬停标签取自代码常量（label:/hintText:/三元），
+  // 运行时 DOM 翻译覆盖不全。仅替换带明确上下文的字面量，不碰按键表与枚举。
+  const labelPass = [
+    ['?"Restore":"Archive"', '?"恢复":"归档"'],
+    ['?"Unpin":"Pin"', '?"取消置顶":"置顶"'],
+    ['hintText:"Restore"', 'hintText:"恢复"'],
+    ['label:"Open in New Tab"', 'label:"在新标签页中打开"'],
+    ['label:"Rename"', 'label:"重命名"'],
+    ['label:"Delete"', 'label:"删除"'],
+    ['label:"Restore"', 'label:"恢复"'],
+    ['label:"Pin"', 'label:"置顶"'],
+    ['label:"Unpin"', 'label:"取消置顶"'],
+    ['label:"Archive"', 'label:"归档"'],
+    ['label:"Edit"', 'label:"编辑"'],
+    ['"Copy Branch Name"', '"复制分支名称"'],
+    ['"Copy Request ID"', '"复制请求 ID"'],
+  ];
+  const workbenchDir = join(root, 'resources', 'app', 'out', 'vs', 'workbench');
+  let labelCount = 0;
+  for (const f of ['workbench.desktop.main_translated.js', 'workbench.glass.main_translated.js']) {
+    const fp = join(workbenchDir, f);
+    if (!existsSync(fp)) continue;
+    let txt = readFileSync(fp, 'utf8');
+    let fileCount = 0;
+    for (const [from, to] of labelPass) {
+      const parts = txt.split(from);
+      if (parts.length > 1) {
+        fileCount += parts.length - 1;
+        txt = parts.join(to);
+      }
+    }
+    writeFileSync(fp, txt);
+    labelCount += fileCount;
+  }
+  info(`静态标签替换：${labelCount} 处`);
 }
 
 /* ---------------- 主流程 ---------------- */
