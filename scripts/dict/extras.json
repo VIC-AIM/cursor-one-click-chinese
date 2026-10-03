@@ -544,5 +544,40 @@
     "changeText": "",
     "searchType": "regex",
     "flags": ""
+  },
+  {
+    "originalText": "Create Project",
+    "changeText": "创建项目",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Create a focused chat where Agents coordinate work",
+    "changeText": "创建一个由智能体协同工作的专注对话",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Workspace",
+    "changeText": "工作区",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Model",
+    "changeText": "模型",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Review my database",
+    "changeText": "检查我的数据库",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Check schema, indexes, and risky access rules",
+    "changeText": "检查架构、索引和有风险的访问规则",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Put a project on a shareable live link",
+    "changeText": "把项目放到可分享的在线链接",
+    "searchType": "exact"
   }
 ]
