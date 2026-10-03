@@ -310,7 +310,7 @@ function patchEngineAsset(extDir) {
   // 每 5 秒调度一次空闲分片重扫，nodeCache 让未变化节点近乎零成本跳过。
   const R5_TAIL = `  if (document.readyState === 'loading') {\r\n    document.addEventListener('DOMContentLoaded', task);\r\n  } else {\r\n    task();\r\n  }\r\n})();`;
   const R5_TAIL_LF = R5_TAIL.replace(/\r\n/g, '\n');
-  const R5_NEW = `  if (document.readyState === 'loading') {\r\n    document.addEventListener('DOMContentLoaded', task);\r\n  } else {\r\n    task();\r\n  }\r\n\r\n  // [cursor-zh-sweep] 周期性兜底补扫：界面模型可能在任意时刻把已翻译节点\r\n  // 重写回英文（上下文菜单复用模板、面板刷新等），观察器无法覆盖全部写入\r\n  // 时机。每 5 秒调度一次空闲分片重扫：nodeCache 让未变化节点近乎零成本\r\n  // 跳过；变化过的节点重新翻译。使用与主扫描相同的禁区过滤器。\r\n  var sweepWalker = null;\r\n  var sweepRunning = false;\r\n  function sweepChunk(deadline) {\r\n    if (!sharedTranslator) { sweepWalker = null; return; }\r\n    var rootEl = document.body || document;\r\n    if (!rootEl) { return; }\r\n    if (!sweepWalker) {\r\n      sweepWalker = document.createTreeWalker(rootEl, NodeFilter.SHOW_TEXT, sharedTranslator.createTextNodeFilter());\r\n    }\r\n    var t0 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : 0;\r\n    var node;\r\n    while ((node = sweepWalker.nextNode())) {\r\n      if (!node.isConnected) { continue; }\r\n      try { sharedTranslator.translateTextNode(node); } catch (_eSweep) {}\r\n      if (deadline && typeof deadline.timeRemaining === 'function' && deadline.timeRemaining() <= 4) { return; }\r\n      if (t0 && (performance.now() - t0) > 12) { return; }\r\n    }\r\n    sweepWalker = null;\r\n  }\r\n  setInterval(function () {\r\n    if (sweepRunning) { return; }\r\n    sweepRunning = true;\r\n    if (typeof requestIdleCallback === 'function') {\r\n      requestIdleCallback(function (dl) {\r\n        try { sweepChunk(dl); } catch (_eS1) { sweepWalker = null; } finally { sweepRunning = false; }\r\n      }, { timeout: 6000 });\r\n    } else {\r\n      try { sweepChunk(null); } catch (_eS2) { sweepWalker = null; } finally { sweepRunning = false; }\r\n    }\r\n  }, 5000);\r\n})();`;
+  const R5_NEW = `  if (document.readyState === 'loading') {\r\n    document.addEventListener('DOMContentLoaded', task);\r\n  } else {\r\n    task();\r\n  }\r\n\r\n  // [cursor-zh-sweep] 周期性兜底补扫：界面模型可能在任意时刻把已翻译节点\r\n  // 重写回英文（上下文菜单复用模板、面板刷新等），观察器无法覆盖全部写入\r\n  // 时机。每 5 秒调度一次空闲分片重扫：nodeCache 让未变化节点近乎零成本\r\n  // 跳过；变化过的节点重新翻译。使用与主扫描相同的禁区过滤器。\r\n  var sweepWalker = null;\r\n  var sweepRunning = false;\r\n  function sweepChunk(deadline) {\r\n    if (!sharedTranslator) { sweepWalker = null; return; }\r\n    var rootEl = document.body || document;\r\n    if (!rootEl) { return; }\r\n    if (!sweepWalker) {\r\n      sweepWalker = document.createTreeWalker(rootEl, NodeFilter.SHOW_TEXT, sharedTranslator.createTextNodeFilter());\r\n    }\r\n    try { sharedTranslator.translateAttributes(rootEl); } catch (_eAttr) {}\r\n    var t0 = (typeof performance !== 'undefined' && performance.now) ? performance.now() : 0;\r\n    var node;\r\n    while ((node = sweepWalker.nextNode())) {\r\n      if (!node.isConnected) { continue; }\r\n      try { sharedTranslator.translateTextNode(node); } catch (_eSweep) {}\r\n      if (deadline && typeof deadline.timeRemaining === 'function' && deadline.timeRemaining() <= 4) { return; }\r\n      if (t0 && (performance.now() - t0) > 12) { return; }\r\n    }\r\n    sweepWalker = null;\r\n  }\r\n  setInterval(function () {\r\n    if (sweepRunning) { return; }\r\n    sweepRunning = true;\r\n    if (typeof requestIdleCallback === 'function') {\r\n      requestIdleCallback(function (dl) {\r\n        try { sweepChunk(dl); } catch (_eS1) { sweepWalker = null; } finally { sweepRunning = false; }\r\n      }, { timeout: 6000 });\r\n    } else {\r\n      try { sweepChunk(null); } catch (_eS2) { sweepWalker = null; } finally { sweepRunning = false; }\r\n    }\r\n  }, 5000);\r\n})();`;
   const R5_NEW_LF = R5_NEW.replace(/\r\n/g, '\n');
   if (s.includes('[cursor-zh-sweep]')) {
     skipped.push('补丁5（周期性兜底补扫）：已存在');
@@ -322,6 +322,21 @@ function patchEngineAsset(extDir) {
     applied.push('补丁5：周期性兜底补扫（LF 版本）');
   } else {
     info('[警告] 引擎代码结构有变化，补丁5 未应用（不影响其余步骤）。');
+  }
+
+  // 补丁 6：属性翻译支持 data-placeholder —— 输入框占位符由
+  // CSS content:attr(data-placeholder) 渲染，不在默认属性列表里。
+  const R6A_OLD = "var ATTR_SELECTOR = 'input[placeholder], textarea[placeholder], input[title], button[title], button[aria-label], [aria-label]';";
+  const R6A_NEW = "var ATTR_SELECTOR = 'input[placeholder], textarea[placeholder], input[title], button[title], button[aria-label], [aria-label], [data-placeholder]';";
+  const R6B_OLD = "var attrs = ['placeholder', 'title', 'aria-label'];";
+  const R6B_NEW = "var attrs = ['placeholder', 'title', 'aria-label', 'data-placeholder'];";
+  if (s.includes('[data-placeholder]')) {
+    skipped.push('补丁6（data-placeholder 占位符）：已存在');
+  } else if (s.includes(R6A_OLD) && s.includes(R6B_OLD)) {
+    s = s.replace(R6A_OLD, R6A_NEW).replace(R6B_OLD, R6B_NEW);
+    applied.push('补丁6：属性翻译支持 data-placeholder 占位符');
+  } else {
+    info('[警告] 引擎代码结构有变化，补丁6 未应用（不影响其余步骤）。');
   }
 
   writeFileSync(assetPath, s);
@@ -366,6 +381,7 @@ async function applyLocalization(extDir, root) {
     ['label:"Archive"', 'label:"归档"'],
     ['label:"Edit"', 'label:"编辑"'],
     ['"Copy Branch Name"', '"复制分支名称"'],
+    ['"Plan, Build, / for skills, @ for context"', '"规划、构建；输入 / 使用技能，输入 @ 添加上下文"'],
     ['"Copy Request ID"', '"复制请求 ID"'],
   ];
   const workbenchDir = join(root, 'resources', 'app', 'out', 'vs', 'workbench');

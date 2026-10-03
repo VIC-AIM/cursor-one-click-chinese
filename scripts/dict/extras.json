@@ -599,5 +599,10 @@
     "originalText": "your view into tiled panes",
     "changeText": "你的视图为平铺窗格",
     "searchType": "exact"
+  },
+  {
+    "originalText": "Select Composer in your model picker for a great balance of intelligence and cost",
+    "changeText": "在模型选择器中选择 Composer：智能与成本的绝佳平衡",
+    "searchType": "exact"
   }
 ]
