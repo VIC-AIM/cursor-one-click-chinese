@@ -604,5 +604,35 @@
     "originalText": "Select Composer in your model picker for a great balance of intelligence and cost",
     "changeText": "在模型选择器中选择 Composer：智能与成本的绝佳平衡",
     "searchType": "exact"
+  },
+  {
+    "originalText": "Testing discussion",
+    "changeText": "测试讨论",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Goals",
+    "changeText": "目标",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "keep",
+    "changeText": "保持",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "job",
+    "changeText": "任务",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "done",
+    "changeText": "完成",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "instantly",
+    "changeText": "立即",
+    "searchType": "exact"
   }
 ]
