@@ -579,5 +579,25 @@
     "originalText": "Put a project on a shareable live link",
     "changeText": "把项目放到可分享的在线链接",
     "searchType": "exact"
+  },
+  {
+    "originalText": "Plan, Build, / for skills, @ for context",
+    "changeText": "规划、构建；输入 / 使用技能，输入 @ 添加上下文",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Drag and drop",
+    "changeText": "拖拽",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "agents chats to split",
+    "changeText": "智能体聊天来拆分",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "your view into tiled panes",
+    "changeText": "你的视图为平铺窗格",
+    "searchType": "exact"
   }
 ]
